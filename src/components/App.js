@@ -1,14 +1,16 @@
-import React  from "react";
+import React from 'react';
+import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
-import ContactForm from "./ContactForm/ContactForm";
-import ContactList from "./ContactList/ContactList";
-import Filter from "./Filter/Filter";
+import PropTypes from 'prop-types';
+import ContactForm from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
 import Header from './Header/Header';
 import Logo from './Logo/Logo';
-// import ShowModalWarning from './ShowModal/ShowModalWarning';
+import ShowModalWarning from './ShowModal/ShowModalWarning';
 import './App.css';
 
-function App() {
+function App({ modalWarning, contactsItems }) {
 
     return (
         <div className="Wrapper">
@@ -40,46 +42,61 @@ function App() {
                 <ContactForm
             />
 
-            {/* <CSSTransition
-                in={contacts.length > 1}
+            <CSSTransition
+                in={contactsItems.length > 1}
                 timeout={250}
                 classNames="FilterAppear"
                 unmountOnExit
-            > */}
+            >
                     <Filter/>
-            {/* </CSSTransition> */}
+            </CSSTransition>
                 
-            {/* <CSSTransition
-                in={contacts.length > 0}
+            <CSSTransition
+                in={contactsItems.length > 0}
                 timeout={250}
                 classNames="ContactsAppear"
                 unmountOnExit
-            > */}
+            >
                 <h2 className="ContactsName">
                     Contacts
                 </h2>
-            {/* </CSSTransition> */}
+            </CSSTransition>
                 
-            {/* <CSSTransition
-                in={visibleContacts.length > 0}
+            <CSSTransition
+                in={contactsItems.length > 0}
                 timeout={250}
                 classNames="ContactListApp"
-                // unmountOnExit
-            > */}
+                unmountOnExit
+            >
                 <ContactList/>
-            {/* </CSSTransition> */}
+            </CSSTransition>
 
-            {/* <CSSTransition
+            <CSSTransition
                 in={modalWarning}
                 timeout={250}
                 classNames="ShowModalAppear"
                 unmountOnExit
             >
-                <ShowModalWarning />
-            </CSSTransition> */}
+
+             <ShowModalWarning />
+
+            </CSSTransition>
                
         </div>
     );
 };
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        modalWarning: state.contacts.modalWarning,
+        contactsItems: state.contacts.contactsItems,
+        // filterShow: state.contacts.contactsItems
+    };
+};
+
+App.propTypes = {
+    modalWarning: PropTypes.bool.isRequired,
+    contactsItems: PropTypes.array.isRequired,
+};
+
+export default connect(mapStateToProps)(App);

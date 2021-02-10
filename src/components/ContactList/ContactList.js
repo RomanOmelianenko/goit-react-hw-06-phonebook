@@ -49,13 +49,13 @@ ContactList.propTypes = {
 };
 
 const mapStateToProps = state => {
-    const { contactsItems, filter } = state.contact;
+    const { contactsItems, filter } = state.contacts;
     const normalizedFilter = filter.toLowerCase();
-    const visibleConacts = contactsItems.filter(item =>
+    const visibleContacts = contactsItems.filter(item =>
         item.text.name.toLowerCase().includes(normalizedFilter))
     
     return {
-        contacts: visibleConacts
+        contacts: visibleContacts
     };
 };
 

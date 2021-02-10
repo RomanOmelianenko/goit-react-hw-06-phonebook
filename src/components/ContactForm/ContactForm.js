@@ -23,10 +23,40 @@ class ContactForm extends Component {
         });
     };
 
-    handleSubmit = (e) => {
+    // sameNameContact = () => {
+    //     const { name } = this.state;
+    //     return this.props.contactsItems.find(sameContact =>
+    //         sameContact.text.name.toLowerCase() === name.toLowerCase());
+    // };
+
+    handleSubmit = e => {
         e.preventDefault();
 
-        this.props.onAddContact({ ...this.state });
+        // const sameNameContact = this.props.contactsItems.find(sameContact =>
+        //     sameContact.text.name.toLowerCase() === this.state.name.toLowerCase());
+        
+        const { name, number } = this.state;
+
+        const sameNameContact = this.props.contactsItems
+            .map(contact => contact.text.name)
+            .includes(name);
+        
+        const inputNumber = Number(number)
+
+        if (sameNameContact) {
+            this.props.onSameNameContact();
+            setTimeout(() => {
+                this.props.onSameNameContact();
+            }, 1500);
+        } else if (name.length === 0) {
+            alert("Field 'Name' must be filled!");
+        } else if (number.length === 0) {
+            alert("Field 'Number' must be filled!")
+        } else if (!inputNumber) {
+            alert("Insert the number")
+        } else {
+            this.props.onAddContact({ ...this.state });
+        }
 
         this.setState({ name: "", number: "" });
     };
@@ -75,8 +105,16 @@ class ContactForm extends Component {
     };
 };
 
+const mapStateToProps = state => {
+  return {
+      contactsItems: state.contacts.contactsItems,
+    //   modalWarning: !state.contacts.modalWarning
+  }
+};
+
 const mapDispatchToProps = {
-    onAddContact: contactsActions.addContact
+    onAddContact: contactsActions.addContact,
+    onSameNameContact: contactsActions.showModalWarning
 };
 // или так mapDispatchToProps
 // const mapDispatchToProps = dispatch => {
@@ -85,4 +123,4 @@ const mapDispatchToProps = {
 //     }
 // };
 
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
